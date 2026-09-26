@@ -210,12 +210,19 @@ footer{position:fixed;z-index:5;bottom:0;left:4.2vw;right:4.2vw;height:76px;disp
 @media(max-width:800px){.device-picture{width:96%;max-width:none}.device-node figcaption{min-height:27px}}
 
 /* Reuse the cover's animated SR core beside the section number. */
-.slide-mark{position:absolute;right:6.6vw;top:0;display:flex;align-items:center;gap:10px;height:54px;pointer-events:none}
-.slide-mark .mini-sphere{display:block;width:54px;height:54px}
+.slide-mark{position:absolute;right:6.6vw;top:0;display:flex;align-items:center;gap:10px;height:108px;pointer-events:none}
+.slide-mark .mini-sphere{display:block;width:108px;height:108px}
 .slide-mark .section-index{position:static;font-size:43px;line-height:1;font-weight:300;color:#b8b5d84d}
-@media(min-width:1700px){.slide-mark{height:58px}.slide-mark .mini-sphere{width:58px;height:58px}.slide-mark .section-index{font-size:46px}}
-@media(max-height:760px) and (min-width:801px){.slide-mark{height:35px;gap:8px}.slide-mark .mini-sphere{width:35px;height:35px}.slide-mark .section-index{font-size:29px}}
-@media(max-width:800px){.slide-mark{right:7vw;top:0;height:34px;gap:7px}.slide-mark .mini-sphere{width:34px;height:34px}.slide-mark .section-index{font-size:27px}}
+@media(min-width:1700px){.slide-mark{height:116px}.slide-mark .mini-sphere{width:116px;height:116px}.slide-mark .section-index{font-size:46px}}
+@media(max-height:760px) and (min-width:801px){.slide-mark{height:70px;gap:8px}.slide-mark .mini-sphere{width:70px;height:70px}.slide-mark .section-index{font-size:29px}}
+@media(max-width:800px){.slide-mark{right:7vw;top:0;height:68px;gap:7px}.slide-mark .mini-sphere{width:68px;height:68px}.slide-mark .section-index{font-size:27px}}
+
+.working .slide-heading{max-width:none;padding-right:166px}
+@media(min-width:1700px){.working .slide-heading{padding-right:180px}}
+@media(max-height:760px) and (min-width:801px){.working .slide-heading{padding-right:118px}}
+@media(max-width:800px){.working .slide-heading{padding-right:108px}}
+
+@media(min-height:761px) and (max-height:1000px) and (min-width:1101px){.development-slide .bt-highlights{margin-top:18px;padding-top:12px}.enhancement-slide .bt-metrics{gap:14px}.enhancement-slide .bt-conclusion{margin-top:15px;padding-top:12px}}
 </style>
 </head>
 <body>
