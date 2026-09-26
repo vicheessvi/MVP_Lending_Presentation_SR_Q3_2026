@@ -223,6 +223,14 @@ footer{position:fixed;z-index:5;bottom:0;left:4.2vw;right:4.2vw;height:76px;disp
 @media(max-width:800px){.working .slide-heading{padding-right:108px}}
 
 @media(min-height:761px) and (max-height:1000px) and (min-width:1101px){.development-slide .bt-highlights{margin-top:18px;padding-top:12px}.enhancement-slide .bt-metrics{gap:14px}.enhancement-slide .bt-conclusion{margin-top:15px;padding-top:12px}}
+
+/* The finale gives the animated conversation the larger half of the canvas. */
+.ending{grid-template-columns:.88fr 1.12fr;gap:1vw;padding-right:3vw}
+.ending h2{font-size:clamp(54px,6.8vw,106px);letter-spacing:-3px}
+.ending .end-scene{min-width:0;isolation:isolate}
+.ending .end-subtitle{max-width:440px}
+@media(max-width:800px){.ending{grid-template-columns:1fr;grid-template-rows:auto minmax(270px,1fr);gap:4px;padding-right:7vw}.ending h2{font-size:60px;letter-spacing:-2px}.ending .end-scene{min-height:270px}.ending .end-subtitle{max-width:none}}
+@media(max-height:560px){.ending{grid-template-columns:.9fr 1.1fr;grid-template-rows:1fr;gap:10px}.ending h2{font-size:50px}.ending .end-scene{min-height:210px}.ending p.end-subtitle{font-size:17px}}
 </style>
 </head>
 <body>
@@ -282,7 +290,7 @@ footer{position:fixed;z-index:5;bottom:0;left:4.2vw;right:4.2vw;height:76px;disp
 </tbody></table>
 <div class="requests-conclusion"><svg class="request-icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="15" class="request-icon-ring"/><circle cx="14" cy="18" r="9"/><circle cx="14" cy="18" r="5"/><path d="m14 18 12-12m-3-3v6h6M14 13v5h5"/></svg><p class="editable" data-edit="s5-conclusion">Фокус на поддержку достигнутой скорости разработки БТ и доработок без потери качества. Полное устранение багов в системе.</p></div>
 </section>
-<section class="slide ending" aria-label="Слайд 6. Вопросы" aria-hidden="true" inert><div class="end-text"><p class="eyebrow">SmartRoom</p><h2>Давайте<br>обсудим</h2><p class="end-subtitle">Какие у вас вопросы<br>и предложения?</p></div><div class="end-scene"><canvas id="ending" aria-label="Вращающиеся объёмные орбиты с объёмным знаком вопроса внутри"></canvas><span class="sr-only">Объёмный переливающийся знак вопроса внутри орбит</span></div></section>
+<section class="slide ending" aria-label="Слайд 6. Вопросы" aria-hidden="true" inert><div class="end-text"><p class="eyebrow">SmartRoom</p><h2>Давайте<br>обсудим</h2><p class="end-subtitle">Какие у вас вопросы<br>и предложения?</p></div><div class="end-scene"><canvas id="ending" aria-label="Объёмный знак вопроса в стеклянном облачке диалога, окружённый движущимися сообщениями и световыми импульсами"></canvas><span class="sr-only">Объёмный знак вопроса внутри облачка диалога. Вокруг движутся вопросы, идеи и ответы.</span></div></section>
 </main>
 <footer><div class="footer-left"><span class="keyboard-hint">← → слайды&nbsp;&nbsp; / &nbsp;&nbsp;F полный экран</span></div><nav class="dots" aria-label="Выбор слайда"><button class="dot" aria-label="Слайд 1" aria-current="true"></button><button class="dot" aria-label="Слайд 2" aria-current="false"></button><button class="dot" aria-label="Слайд 3" aria-current="false"></button><button class="dot" aria-label="Слайд 4" aria-current="false"></button><button class="dot" aria-label="Слайд 5" aria-current="false"></button><button class="dot" aria-label="Слайд 6" aria-current="false"></button></nav><div class="nav"><span class="counter" id="counter" aria-live="polite">01 / 06</span><button class="nav-arrow" id="prev" aria-label="Предыдущий слайд" disabled>‹</button><button class="nav-arrow" id="next" aria-label="Следующий слайд">›</button></div></footer>
 <div class="toast" id="toast" role="status"></div><span class="sr-only" id="timer-announcement" aria-live="polite"></span>
@@ -358,13 +366,51 @@ function drawSphere(t,canvasIndex=0,mini=false){
  for(let i=0;i<points.length;i++){const p=points[i];if(p[2]>.16&&i%3===0)glowDot(ctx,p[0],p[1],1.6,i%2?'#a6f2f4':'#cbbdff')}
  const rim=ctx.createLinearGradient(cx-r,cy-r,cx+r,cy+r);rim.addColorStop(0,'#a1f6ff88');rim.addColorStop(.35,'#b4adff14');rim.addColorStop(.65,'#b4adff14');rim.addColorStop(1,'#a397e77a');ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.strokeStyle=rim;ctx.lineWidth=1.1;ctx.stroke();
 }
+
+// A small 3D conversation: questions, ideas and replies circle a glass speech bubble.
+const dialogueView={x:0,y:0,tx:0,ty:0};
+canvases[1].addEventListener('pointermove',event=>{const box=canvases[1].getBoundingClientRect();dialogueView.tx=(event.clientX-box.left)/box.width-.5;dialogueView.ty=(event.clientY-box.top)/box.height-.5});
+canvases[1].addEventListener('pointerleave',()=>{dialogueView.tx=0;dialogueView.ty=0});
+function speechPath(ctx,bw,bh){const x=-bw/2,y=-bh/2,k=bh*.20;ctx.beginPath();ctx.moveTo(x+k,y);ctx.lineTo(x+bw-k,y);ctx.quadraticCurveTo(x+bw,y,x+bw,y+k);ctx.lineTo(x+bw,y+bh-k);ctx.quadraticCurveTo(x+bw,y+bh,x+bw-k,y+bh);ctx.lineTo(-bw*.1,y+bh);ctx.lineTo(-bw*.35,y+bh*1.23);ctx.lineTo(-bw*.3,y+bh);ctx.lineTo(x+k,y+bh);ctx.quadraticCurveTo(x,y+bh,x,y+bh-k);ctx.lineTo(x,y+k);ctx.quadraticCurveTo(x,y,x+k,y);ctx.closePath()}
 function drawEnding(t){
- const ctx=contexts[1];if(!ctx)return;const{w,h}=sizes[1],cx=w/2,cy=h/2,r=Math.min(w*.34,h*.33);ctx.clearRect(0,0,w,h);
- const glow=ctx.createRadialGradient(cx,cy,0,cx,cy,r*1.65);glow.addColorStop(0,'#7859c12d');glow.addColorStop(1,'#7859c100');ctx.fillStyle=glow;ctx.fillRect(0,0,w,h);
- const rings=[];for(let k=0;k<7;k++){const points=[];for(let i=0;i<=180;i++){const a=i/180*Math.PI*2;points.push(project(rotate(Math.cos(a),Math.sin(a),0,t*.13+k*.32,.45+k*.28),cx,cy,r*(1+k*.025)))}const a=t*.35+k*1.1;const dot=project(rotate(Math.cos(a),Math.sin(a),0,t*.13+k*.32,.45+k*.28),cx,cy,r*(1+k*.025));rings.push({points,dot,k})}
- function half(front){for(const{points,dot,k}of rings){for(let i=1;i<points.length;i++){if(((points[i-1][2]+points[i][2])>=0)!==front)continue;strokePath(ctx,[points[i-1],points[i]],front?(k%2?'#77e2efa0':'#bda1ffb0'):(k%2?'#77e2ef38':'#bda1ff38'),k%2?1:1.5)}if((dot[2]>=0)===front)glowDot(ctx,dot[0],dot[1],k%2?3:2.5,k%2?'#96f2f7':'#d0bdff')}}
- half(false);drawMetalGlyph(ctx,'?',cx,cy,r,t);half(true);
- for(let i=0;i<18;i++){const a=i*2.3999+t*.035,rr=r*(1.45+(i%3)*.1);glowDot(ctx,cx+Math.cos(a)*rr,cy+Math.sin(a)*rr*.75,1,'#667597')}
+ const ctx=contexts[1];if(!ctx)return;const{w,h}=sizes[1],r=Math.min(w*.267,h*.285),cx=w*.51,cy=h*.49;
+ if(!motionPaused){dialogueView.x+=(dialogueView.tx-dialogueView.x)*.055;dialogueView.y+=(dialogueView.ty-dialogueView.y)*.055}
+ const dx=dialogueView.x,dy=dialogueView.y,coreY=Math.sin(t*.65)*.027;
+ ctx.clearRect(0,0,w,h);
+ const haze=ctx.createRadialGradient(cx,cy,r*.12,cx,cy,r*2.15);haze.addColorStop(0,'#7c73ef27');haze.addColorStop(.48,'#4845ad1e');haze.addColorStop(.75,'#1a719414');haze.addColorStop(1,'#14204000');ctx.fillStyle=haze;ctx.fillRect(0,0,w,h);
+ // Quiet depth particles provide motion without competing with the title.
+ for(let i=0;i<48;i++){const a=i*2.399963+t*(.012+(i%4)*.005),rad=r*(1.30+(i%9)*.07),x=cx+Math.cos(a)*rad,y=cy+Math.sin(a)*rad*.82;const alpha=.12+.20*(.5+.5*Math.sin(t*.6+i));ctx.fillStyle='rgba(161,195,245,'+alpha+')';ctx.beginPath();ctx.arc(x,y,i%6===0?1.5:.7,0,Math.PI*2);ctx.fill()}
+ // Soft concentric pulses beneath the floating conversation sculpture.
+ for(let k=0;k<3;k++){const phase=(t*.12+k/3)%1,rx=r*(.5+phase*1.1),ry=rx*.18;ctx.beginPath();ctx.ellipse(cx,cy+r*.99,rx,ry,0,0,Math.PI*2);ctx.strokeStyle='rgba(119,226,239,'+(.20*(1-phase))+')';ctx.lineWidth=1.2;ctx.stroke()}
+ const yaw=.22+Math.sin(t*.28)*.12+dx*.12,pitch=-.08+Math.sin(t*.23)*.06+dy*.08;
+ function onPlane(pos,z,scale,angle,fn){const angleY=angle+dx*.13,angleX=-.1+dy*.08;const point=(x,y)=>project(rotate(x,y,z,angleY,angleX).map((v,i)=>v+pos[i]),cx,cy,r);const o=point(0,0),u=point(.01,0),v=point(0,.01);ctx.save();ctx.translate(o[0],o[1]);ctx.transform((u[0]-o[0])/(r*.01),(u[1]-o[1])/(r*.01),(v[0]-o[0])/(r*.01),(v[1]-o[1])/(r*.01),0,0);fn(scale);ctx.restore()}
+ function bubble(item,frontOnly=false){const{pos,scale,kind,angle,cyan}=item,bw=r*1.43*scale,bh=r*1.17*scale,main=kind==='main';
+  if(!frontOnly){for(let layer=main?15:7;layer>=0;layer--){const z=-layer*(main?.012:.009);onPlane(pos,z,scale,angle,()=>{speechPath(ctx,bw,bh);ctx.fillStyle=layer===0?'rgba(26,38,76,.67)':(cyan?'#203e55':'#30264f');if(layer===0){const fill=ctx.createLinearGradient(-bw/2,-bh/2,bw/2,bh/2);fill.addColorStop(0,cyan?'#38788b80':'#68639c80');fill.addColorStop(.48,'#1c264b80');fill.addColorStop(1,'#2e235288');ctx.fillStyle=fill}ctx.fill()})}}
+  onPlane(pos,.012,scale,angle,()=>{speechPath(ctx,bw,bh);const rim=ctx.createLinearGradient(-bw/2,-bh/2,bw/2,bh/2);rim.addColorStop(0,cyan?'#b4fcffe0':'#d8c9ffe8');rim.addColorStop(.34,'#c1c9ff70');rim.addColorStop(.7,cyan?'#3b9aaf77':'#776abb70');rim.addColorStop(1,cyan?'#a4f3ffe0':'#d5b5fff0');ctx.strokeStyle=rim;ctx.lineWidth=main?1.7:1.2;ctx.shadowBlur=main?18:8;ctx.shadowColor=cyan?'#77e2ef44':'#b4a0ff55';ctx.stroke();ctx.shadowBlur=0;
+   // Thin upper bevel catches the moving light.
+   ctx.beginPath();ctx.moveTo(-bw*.27,-bh*.5+2);ctx.lineTo(bw*.18,-bh*.5+2);ctx.strokeStyle='#e4faff8c';ctx.lineWidth=.7;ctx.stroke();
+   if(!main&&!frontOnly){ctx.strokeStyle=cyan?'#c3fbff':'#e8dcff';ctx.fillStyle=cyan?'#b9f9ff':'#e0d5ff';ctx.lineWidth=Math.max(1.5,r*.010);ctx.lineCap='round';ctx.lineJoin='round';const u=r*scale;
+    if(kind==='dots'){for(let j=-1;j<=1;j++){ctx.globalAlpha=.35+.65*(.5+.5*Math.sin(t*2.1-j*.9+item.id));ctx.beginPath();ctx.arc(j*u*.23,0,u*.06,0,Math.PI*2);ctx.fill()}ctx.globalAlpha=1}
+    else if(kind==='idea'){ctx.beginPath();ctx.arc(0,-u*.07,u*.19,Math.PI*.15,Math.PI*.85,true);ctx.lineTo(-u*.10,u*.22);ctx.lineTo(u*.10,u*.22);ctx.closePath();ctx.stroke();ctx.beginPath();ctx.moveTo(-u*.09,u*.31);ctx.lineTo(u*.09,u*.31);ctx.moveTo(0,-u*.39);ctx.lineTo(0,-u*.48);ctx.moveTo(-u*.31,-u*.27);ctx.lineTo(-u*.39,-u*.33);ctx.moveTo(u*.31,-u*.27);ctx.lineTo(u*.39,-u*.33);ctx.stroke()}
+    else if(kind==='reply'){ctx.beginPath();ctx.moveTo(-u*.3,-u*.10);ctx.lineTo(u*.30,-u*.10);ctx.moveTo(-u*.3,u*.12);ctx.lineTo(u*.12,u*.12);ctx.stroke()}
+    else{ctx.font='650 '+u*.70+'px "Segoe UI",Arial,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('?',0,-u*.025)}
+   }
+  })
+ }
+ const satellites=[];const kinds=['dots','idea','question','reply','dots','question'];
+ for(let i=0;i<6;i++){const a=t*.115+i*Math.PI/3+.24;const pos=[Math.cos(a)*1.26,Math.sin(a)*1.12,Math.sin(a+.65)*.48];pos[0]+=dx*.07;pos[1]+=dy*.05;const screen=project(pos,cx,cy,r);satellites.push({id:i,pos,screen,scale:.31+(i%3)*.025,kind:kinds[i],angle:Math.sin(a)*.35,cyan:i%2===0})}
+ // Curved packets connect each reply to the question, with a short luminous tail.
+ for(const item of satellites){const p=item.screen,center=[cx,cy+coreY*r],mx=(p[0]+cx)/2+(p[1]-cy)*.1,my=(p[1]+cy)/2-(p[0]-cx)*.1;const curve=q=>[(1-q)*(1-q)*p[0]+2*(1-q)*q*mx+q*q*center[0],(1-q)*(1-q)*p[1]+2*(1-q)*q*my+q*q*center[1]];ctx.beginPath();ctx.moveTo(p[0],p[1]);ctx.quadraticCurveTo(mx,my,...center);ctx.strokeStyle=item.cyan?'#77e2ef15':'#b8a4ff1b';ctx.lineWidth=.8;ctx.stroke();const progress=(t*.19+item.id*.167)%1,trail=[];for(let j=0;j<=10;j++)trail.push(curve(Math.max(0,progress-.08+j*.008)));strokePath(ctx,trail,item.cyan?'#77e2ef80':'#c4aeff80',1.4);const point=curve(progress);glowDot(ctx,...point,1.6,item.cyan?'#a9faff':'#ddc8ff')}
+ satellites.filter(a=>a.pos[2]<0).sort((a,b)=>a.pos[2]-b.pos[2]).forEach(item=>bubble(item));
+ // A single luminous ribbon passes behind the main bubble, replacing the old orbit cage.
+ const ribbon=[];for(let i=0;i<=150;i++){const a=i/150*Math.PI*2,point=project(rotate(Math.cos(a)*1.12,Math.sin(a)*.72,Math.sin(a+.7)*.35,t*.06,.25),cx,cy,r);ribbon.push(point)}
+ for(let i=1;i<ribbon.length;i++){const z=(ribbon[i-1][2]+ribbon[i][2])/2;if(z>0)continue;strokePath(ctx,[ribbon[i-1],ribbon[i]],'#9a9cf366',1.4)}
+ const main={pos:[dx*.08,coreY,-.02],scale:1,kind:'main',angle:yaw,cyan:false};bubble(main);
+ drawMetalGlyph(ctx,'?',cx+dx*r*.08,cy+coreY*r-r*.018,r*.91,t+.6);
+ // Very faint glass reflection over the letter, followed by the crisp front rim.
+ onPlane(main.pos,.02,1,yaw,()=>{speechPath(ctx,r*1.43,r*1.17);ctx.save();ctx.clip();const reflection=ctx.createLinearGradient(-r,0,r,0);reflection.addColorStop(0,'#ffffff00');reflection.addColorStop(.42,'#d0faff00');reflection.addColorStop(.5+Math.sin(t*.38)*.035,'#e0fbff0a');reflection.addColorStop(.60,'#ffffff00');reflection.addColorStop(1,'#ffffff00');ctx.fillStyle=reflection;ctx.fillRect(-r,-r,r*2,r*2);ctx.restore()});bubble(main,true);
+ satellites.filter(a=>a.pos[2]>=0).sort((a,b)=>a.pos[2]-b.pos[2]).forEach(item=>bubble(item));
+ for(let i=1;i<ribbon.length;i++){const z=(ribbon[i-1][2]+ribbon[i][2])/2;if(z<=0)continue;strokePath(ctx,[ribbon[i-1],ribbon[i]],'rgba(119,226,239,'+(.07+z*.22)+')',1.1)}
 }
 function drawScenes(t){if(index===0)drawSphere(t);if(slides[index].classList.contains('ending'))drawEnding(t);const mini=slides[index].querySelector('.mini-sphere');if(mini)drawSphere(t,canvases.indexOf(mini),true)}
 function frame(now){const dt=Math.min((now-lastFrame)/1000,.08);lastFrame=now;if(!motionPaused&&!document.hidden){animationTime+=dt;drawScenes(animationTime)}requestAnimationFrame(frame)}
