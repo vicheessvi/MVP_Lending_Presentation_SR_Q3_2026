@@ -243,12 +243,13 @@ footer{position:fixed;z-index:5;bottom:0;left:4.2vw;right:4.2vw;height:76px;disp
 .development-slide:not(.enhancement-slide) .bt-plan .bt-quantity .editable{flex:none;white-space:nowrap}
 .development-slide:not(.enhancement-slide) .bt-plan .bt-unit{font-size:11px;flex:none}
 @media(max-height:760px) and (min-width:1101px){.development-slide:not(.enhancement-slide) .bt-plan{grid-template-columns:minmax(0,1fr) 74px}}
-.ending .finale-sphere{display:block;width:108px;height:108px;margin:0 0 18px}
-.ending .end-text>.eyebrow{margin-bottom:7px}
+.ending .finale-brand{position:absolute;left:6.6vw;top:24px;z-index:2;text-align:left;pointer-events:none}
+.ending .finale-brand>.eyebrow{margin:0 0 7px}
+.ending .finale-sphere{display:block;width:108px;height:108px;margin:0}
 @media(min-width:1700px){.ending .finale-sphere{width:116px;height:116px}}
-@media(max-height:760px) and (min-width:801px){.ending .finale-sphere{width:70px;height:70px;margin-bottom:14px}}
-@media(max-width:800px){.ending .finale-sphere{width:68px;height:68px;margin:0 auto 14px}}
-@media(max-height:560px){.ending{overflow:auto}}
+@media(max-height:760px) and (min-width:801px){.ending .finale-brand{top:12px}.ending .finale-sphere{width:70px;height:70px}}
+@media(max-width:800px){.ending{padding-top:122px}.ending .finale-brand{top:17px;left:7vw}.ending .finale-sphere{width:68px;height:68px;margin:0}}
+@media(max-height:560px){.ending{overflow:auto;padding-top:112px}}
 </style>
 </head>
 <body>
@@ -309,7 +310,7 @@ footer{position:fixed;z-index:5;bottom:0;left:4.2vw;right:4.2vw;height:76px;disp
 <button class="secondary request-add" type="button" id="request-add">+ Добавить параметр</button>
 <div class="requests-conclusion"><svg class="request-icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="15" class="request-icon-ring"/><circle cx="14" cy="18" r="9"/><circle cx="14" cy="18" r="5"/><path d="m14 18 12-12m-3-3v6h6M14 13v5h5"/></svg><p class="editable" data-edit="s5-conclusion">Фокус на поддержку достигнутой скорости разработки БТ и доработок без потери качества. Полное устранение багов в системе.</p></div>
 </section>
-<section class="slide ending" aria-label="Слайд 6. Вопросы" aria-hidden="true" inert><div class="end-text"><p class="eyebrow">SmartRoom</p><canvas class="mini-sphere finale-sphere" role="img" aria-label="Анимированная сфера SmartRoom с буквами SR"></canvas><h2>Давайте<br>обсудим</h2><p class="end-subtitle">Какие у вас вопросы<br>и предложения?</p></div><div class="end-scene"><canvas id="ending" aria-label="Объёмная галочка ответа в стеклянном облачке диалога, окружённая вопросами, идеями и световыми импульсами"></canvas><span class="sr-only">Галочка обозначает ответы на вопросы и предложения. Вокруг движутся сообщения и идеи.</span></div></section>
+<section class="slide ending" aria-label="Слайд 6. Вопросы" aria-hidden="true" inert><div class="finale-brand"><p class="eyebrow">SmartRoom</p><canvas class="mini-sphere finale-sphere" role="img" aria-label="Анимированная сфера SmartRoom с буквами SR"></canvas></div><div class="end-text"><h2>Давайте<br>обсудим</h2><p class="end-subtitle">Какие у вас вопросы<br>и предложения?</p></div><div class="end-scene"><canvas id="ending" aria-label="Объёмная галочка ответа в стеклянном облачке диалога, окружённая вопросами, идеями и световыми импульсами"></canvas><span class="sr-only">Галочка обозначает ответы на вопросы и предложения. Вокруг движутся сообщения и идеи.</span></div></section>
 </main>
 <footer><div class="footer-left"><span class="keyboard-hint">← → слайды&nbsp;&nbsp; / &nbsp;&nbsp;F полный экран</span></div><nav class="dots" aria-label="Выбор слайда"><button class="dot" aria-label="Слайд 1" aria-current="true"></button><button class="dot" aria-label="Слайд 2" aria-current="false"></button><button class="dot" aria-label="Слайд 3" aria-current="false"></button><button class="dot" aria-label="Слайд 4" aria-current="false"></button><button class="dot" aria-label="Слайд 5" aria-current="false"></button><button class="dot" aria-label="Слайд 6" aria-current="false"></button></nav><div class="nav"><span class="counter" id="counter" aria-live="polite">01 / 06</span><button class="nav-arrow" id="prev" aria-label="Предыдущий слайд" disabled>‹</button><button class="nav-arrow" id="next" aria-label="Следующий слайд">›</button></div></footer>
 <div class="toast" id="toast" role="status"></div><span class="sr-only" id="timer-announcement" aria-live="polite"></span>
@@ -424,7 +425,11 @@ function drawEnding(t){
  for(const item of satellites){const p=item.screen,center=[cx,cy+coreY*r],mx=(p[0]+cx)/2+(p[1]-cy)*.1,my=(p[1]+cy)/2-(p[0]-cx)*.1;const curve=q=>[(1-q)*(1-q)*p[0]+2*(1-q)*q*mx+q*q*center[0],(1-q)*(1-q)*p[1]+2*(1-q)*q*my+q*q*center[1]];ctx.beginPath();ctx.moveTo(p[0],p[1]);ctx.quadraticCurveTo(mx,my,...center);ctx.strokeStyle=item.cyan?'#77e2ef15':'#b8a4ff1b';ctx.lineWidth=.8;ctx.stroke();const progress=(t*.19+item.id*.167)%1,trail=[];for(let j=0;j<=10;j++)trail.push(curve(Math.max(0,progress-.08+j*.008)));strokePath(ctx,trail,item.cyan?'#77e2ef80':'#c4aeff80',1.4);const point=curve(progress);glowDot(ctx,...point,1.6,item.cyan?'#a9faff':'#ddc8ff')}
  satellites.filter(a=>a.pos[2]<0).sort((a,b)=>a.pos[2]-b.pos[2]).forEach(item=>bubble(item));
  const main={pos:[dx*.08,coreY,-.02],scale:1,kind:'main',angle:yaw,cyan:false};bubble(main);
- drawMetalGlyph(ctx,'✓',cx+dx*r*.08,cy+coreY*r-r*.018,r*1.02,t+.6,true);
+ // Crisp solid geometry keeps the answer mark sharp without a luminous halo.
+ const checkVertices=[[-.47,-.02],[-.32,-.17],[-.13,.07],[.31,-.45],[.47,-.31],[-.11,.39],[-.25,.39]];
+ const checkPath=()=>{ctx.beginPath();checkVertices.forEach(([x,y],i)=>i?ctx.lineTo(x*r,y*r):ctx.moveTo(x*r,y*r));ctx.closePath()};
+ for(let layer=18;layer>=0;layer--){onPlane(main.pos,-layer*.007,1,yaw,()=>{checkPath();ctx.fillStyle='hsl(242 23% '+(28+(18-layer)*.75)+'%)';ctx.fill()})}
+ onPlane(main.pos,.014,1,yaw,()=>{checkPath();const sheen=ctx.createLinearGradient(-r*.45,-r*.4,r*.45,r*.3);sheen.addColorStop(0,'#a6bfcb');sheen.addColorStop(.38,'#b9c3d1');sheen.addColorStop(.62,'#a89dc3');sheen.addColorStop(1,'#8aa8b9');ctx.fillStyle=sheen;ctx.fill();ctx.lineJoin='round';ctx.strokeStyle='#c0cbd8';ctx.lineWidth=Math.max(.7,r*.004);ctx.stroke();ctx.beginPath();ctx.moveTo(-r*.45,-r*.025);ctx.lineTo(-r*.32,-r*.15);ctx.lineTo(-r*.13,r*.09);ctx.lineTo(r*.31,-r*.425);ctx.strokeStyle='#d2dae385';ctx.lineWidth=Math.max(.8,r*.005);ctx.stroke()});
  // Very faint glass reflection over the letter, followed by the crisp front rim.
  onPlane(main.pos,.02,1,yaw,()=>{speechPath(ctx,r*1.43,r*1.17);ctx.save();ctx.clip();const reflection=ctx.createLinearGradient(-r,0,r,0);reflection.addColorStop(0,'#ffffff00');reflection.addColorStop(.42,'#d0faff00');reflection.addColorStop(.5+Math.sin(t*.38)*.035,'#e0fbff0a');reflection.addColorStop(.60,'#ffffff00');reflection.addColorStop(1,'#ffffff00');ctx.fillStyle=reflection;ctx.fillRect(-r,-r,r*2,r*2);ctx.restore()});bubble(main,true);
  satellites.filter(a=>a.pos[2]>=0).sort((a,b)=>a.pos[2]-b.pos[2]).forEach(item=>bubble(item));
